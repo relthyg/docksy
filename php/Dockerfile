@@ -16,6 +16,8 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash && mv /root/.symfony/b
 
 RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
+RUN curl -sS https://deb.nodesource.com/setup_lts.x | bash - && apt-get install -yqq nodejs
+
 # Clean up
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
