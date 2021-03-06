@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
     pecl channel-update pecl.php.net && \
-    apt-get install -yqq git libicu-dev vim libzip-dev zip
+    apt-get install -yqq git libicu-dev vim libzip-dev zip libjpeg-dev libpng-dev
 
 RUN docker-php-ext-install intl opcache pdo pdo_mysql zip
 RUN pecl install apcu && docker-php-ext-enable apcu
