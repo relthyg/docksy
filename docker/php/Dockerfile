@@ -36,6 +36,9 @@ RUN apt-get update && pecl channel-update pecl.php.net &&\
         pdo_mysql \
         zip
 
+# imagemagick
+RUN apt-get install -y libmagickwand-dev imagemagick && pecl install imagick && docker-php-ext-enable imagick
+
 # apcu
 RUN pecl install apcu && docker-php-ext-enable apcu
 
