@@ -19,3 +19,7 @@ And execute your project's installation routine  as user `www-data` in the `php`
     ...
     
 Navigate to http://localhost:8000 an you should see yout project's landing page.
+
+After pulling new commits of this repo you may want to re-build the containers:
+
+    docker-compose up -d --build
