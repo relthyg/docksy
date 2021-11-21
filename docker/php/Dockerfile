@@ -3,7 +3,7 @@ FROM php:${PHP_VERSION}-fpm
 
 ENV DEBIAN_FRONTEND noninteractive
 
-WORKDIR /var/www
+WORKDIR /srv/app
 
 # non-root user
 ARG PUID=1000
@@ -45,7 +45,6 @@ RUN pecl install apcu && docker-php-ext-enable apcu
 # xdebug
 RUN pecl install xdebug-3.0.2 && docker-php-ext-enable xdebug
 
-# composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # symfony cli
