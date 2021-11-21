@@ -1,4 +1,5 @@
-FROM php:7.4-fpm
+ARG PHP_VERSION
+FROM php:${PHP_VERSION}-fpm-alpine
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -10,42 +11,48 @@ ENV PUID ${PUID}
 ARG PGID=1000
 ENV PGID ${PGID}
 
-RUN addgroup -gid ${PGID} docksy && \
-  adduser -gid 1000 -uid ${PUID} --disabled-password docksy
+RUN addgroup -g ${PGID} docksy && \
+  adduser -G docksy -u ${PUID} --disabled-password docksy
 
 # locales
 ARG LOCALE=POSIX
 ENV LC_ALL ${LOCALE}
 
-# essentials
-RUN apt-get update && pecl channel-update pecl.php.net &&\
-    apt-get install -y \
-        libicu-dev \
-        libzip-dev \
-        libjpeg-dev \
-        libpng-dev \
-        apt-utils \
-        git \
+RUN apk add --no-cache \
+		acl \
+		fcgi \
+		file \
+		gettext \
+		git \
+		gnu-libiconv \
+        imagemagick \
         vim \
-        zip &&\
-    docker-php-ext-install \
-        intl \
-        opcache \
-        pdo \
-        pdo_mysql \
         zip
 
-# imagemagick
-RUN apt-get install -y libmagickwand-dev imagemagick && pecl install imagick && docker-php-ext-enable imagick
-
-# apcu
-RUN pecl install apcu && docker-php-ext-enable apcu
-
-# xdebug
-RUN pecl install xdebug-3.0.2 && docker-php-ext-enable xdebug
+RUN apk add --update --no-cache --virtual .build-dependencies \
+            $PHPIZE_DEPS \
+            icu-dev \
+            libzip-dev \
+            zlib-dev \
+            imagemagick-dev \
+            jpeg-dev \
+            libpng-dev \
+        && pecl install \
+              apcu \
+              opcache \
+              xdebug-3.0.2 \
+              imagick \
+        && docker-php-ext-enable \
+              apcu \
+              xdebug \
+              imagick \
+        && pecl clear-cache \
+        && apk del .build-dependencies
 
 # node
-RUN curl -sS https://deb.nodesource.com/setup_lts.x | bash - && apt-get install -yqq nodejs
+ENV ALPINE_MIRROR "http://dl-cdn.alpinelinux.org/alpine"
+RUN echo "${ALPINE_MIRROR}/edge/main" >> /etc/apk/repositories && \
+    apk add --no-cache nodejs-current  --repository="http://dl-cdn.alpinelinux.org/alpine/edge/community"
 
 RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
