@@ -12,10 +12,10 @@ Start the environment
 
     docker-compose up -d
 
-And execute your project's installation routine  as user `www-data` in the `php` container, e.g.
+And execute your project's installation routine  as user `docksy` in the `php` container, e.g.
 
-    docker-compose exec -u www-data php composer install
-    docker-compose exec -u www-data php npm install
+    docker-compose exec -u docksy php composer install
+    docker-compose exec -u docksy php npm install
     ...
     
 Navigate to http://localhost:8000 an you should see yout project's landing page.
