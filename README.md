@@ -28,9 +28,9 @@ Start the environment
 
 and run
 
-    docker-compose exec -u docksy dexec composer create-project symfony/skeleton .
+    docker-compose exec -u docksy php composer create-project symfony/skeleton .
     # or
-    docker-compose exec -u docksy dexec composer create-project symfony/website-skeleton .
+    docker-compose exec -u docksy php composer create-project symfony/website-skeleton .
 
 ## Miscellaneous
 
