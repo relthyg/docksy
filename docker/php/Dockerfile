@@ -11,8 +11,8 @@ ENV PUID ${PUID}
 ARG PGID=1000
 ENV PGID ${PGID}
 
-RUN groupmod -o -g ${PGID} www-data && \
-    usermod -o -u ${PUID} -g www-data www-data
+RUN addgroup -gid ${PGID} docksy && \
+  adduser -gid 1000 -uid ${PUID} --disabled-password docksy
 
 # locales
 ARG LOCALE=POSIX
