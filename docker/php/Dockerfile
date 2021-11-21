@@ -45,8 +45,6 @@ RUN pecl install apcu && docker-php-ext-enable apcu
 # xdebug
 RUN pecl install xdebug-3.0.2 && docker-php-ext-enable xdebug
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 # symfony cli
 # RUN curl -sS https://get.symfony.com/cli/installer | bash && mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 
@@ -54,3 +52,5 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN curl -sS https://deb.nodesource.com/setup_lts.x | bash - && apt-get install -yqq nodejs
 
 RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
