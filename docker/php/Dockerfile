@@ -59,3 +59,4 @@ RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY --from=symfonycorp/cli /symfony /usr/bin/symfony
 COPY --from=oskarstark/php-cs-fixer-ga /usr/local/bin/php-cs-fixer /usr/bin/php-cs-fixer
+
