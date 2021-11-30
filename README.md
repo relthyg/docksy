@@ -38,7 +38,7 @@ Navigate to http://localhost:8000 an you should see your project's landing page.
 
 You might want to define an alias on your host machine for executing commands inside the php container, e.g.
 
-    alias dexec='docker-compose exec -u docksy php'
+    alias d='docker-compose exec -u docksy php'
 
 After pulling new commits of this repo you may want to re-build the containers:
 
