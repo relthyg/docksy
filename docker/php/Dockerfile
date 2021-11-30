@@ -45,12 +45,11 @@ RUN pecl install apcu && docker-php-ext-enable apcu
 # xdebug
 RUN pecl install xdebug-3.0.2 && docker-php-ext-enable xdebug
 
-# symfony cli
-# RUN curl -sS https://get.symfony.com/cli/installer | bash && mv /root/.symfony/bin/symfony /usr/local/bin/symfony
-
 # node
 RUN curl -sS https://deb.nodesource.com/setup_lts.x | bash - && apt-get install -yqq nodejs
 
 RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=symfonycorp/cli /symfony /usr/bin/symfony
+COPY --from=oskarstark/php-cs-fixer-ga /usr/local/bin/php-cs-fixer /usr/bin/php-cs-fixer
