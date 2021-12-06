@@ -25,35 +25,55 @@ RUN apk add --no-cache \
         gettext \
         git \
         gnu-libiconv \
+        nodejs-current \
+        npm \
         vim \
-        zip
+        zip \
+    && \
+    npm i -g corepack
 
-RUN apk add --update --no-cache --virtual .build-dependencies \
-        $PHPIZE_DEPS \
-        icu-dev \
-        libzip-dev \
-        zlib-dev \
-    && docker-php-ext-install \
-        intl \
-        opcache \
+# install gnu-libiconv and set LD_PRELOAD env to make iconv work fully on Alpine image.
+# see https://github.com/docker-library/php/issues/240#issuecomment-763112749
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
+
+# shamelessly nicked from https://github.com/dunglas/symfony-docker
+ARG APCU_VERSION=5.1.21
+ARG XDEBUG_VERSION=3.1.2
+RUN set -eux; \
+	apk add --no-cache --virtual .build-deps \
+		$PHPIZE_DEPS \
+		icu-dev \
+		libzip-dev \
+		zlib-dev \
+	; \
+	\
+	docker-php-ext-configure zip; \
+	docker-php-ext-install -j$(nproc) \
+		intl \
+		zip \
         pdo \
         pdo_mysql \
-        zip \
-    && pecl install \
-        apcu \
-        xdebug-3.1.2 \
-    && docker-php-ext-enable \
-        apcu \
-        opcache \
+	; \
+	pecl install \
+		apcu-${APCU_VERSION} \
+        xdebug-${XDEBUG_VERSION} \
+	; \
+	pecl clear-cache; \
+	docker-php-ext-enable \
+		apcu \
+		opcache \
         xdebug \
-    && pecl clear-cache \
-    && apk del .build-dependencies
-
-# node, npm & yarn (via corepack, see https://yarnpkg.com/getting-started/install)
-ENV ALPINE_MIRROR "http://dl-cdn.alpinelinux.org/alpine"
-RUN echo "${ALPINE_MIRROR}/edge/main" >> /etc/apk/repositories \
-    && apk add --no-cache nodejs-current npm --repository="http://dl-cdn.alpinelinux.org/alpine/edge/community" \
-    && npm i -g corepack
+	; \
+	\
+	runDeps="$( \
+		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
+			| tr ',' '\n' \
+			| sort -u \
+			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+	)"; \
+	apk add --no-cache --virtual .phpexts-rundeps $runDeps; \
+	\
+	apk del .build-deps
 
 RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
