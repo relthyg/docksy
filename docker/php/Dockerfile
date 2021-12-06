@@ -1,5 +1,4 @@
-ARG PHP_VERSION
-FROM php:${PHP_VERSION}-fpm
+FROM php:7.4-fpm
 
 ENV DEBIAN_FRONTEND noninteractive
 
