@@ -25,7 +25,6 @@ RUN apk add --no-cache \
 		gettext \
 		git \
 		gnu-libiconv \
-        imagemagick \
         vim \
         zip
 
@@ -34,18 +33,13 @@ RUN apk add --update --no-cache --virtual .build-dependencies \
             icu-dev \
             libzip-dev \
             zlib-dev \
-            imagemagick-dev \
-            jpeg-dev \
-            libpng-dev \
         && pecl install \
               apcu \
               opcache \
               xdebug-3.1.2 \
-              imagick \
         && docker-php-ext-enable \
               apcu \
               xdebug \
-              imagick \
         && pecl clear-cache \
         && apk del .build-dependencies
 
