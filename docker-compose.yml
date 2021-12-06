@@ -21,6 +21,7 @@ services:
         - LOCALE=${LOCALE}
     volumes:
       - ${APP_DIR}:/srv/app
+      - ${HOME}/.gitconfig:/home/docksy/.gitconfig
     environment:
       - XDEBUG_CONFIG=client_host=${XDEBUG_CLIENT_HOST} client_port=${XDEBUG_CLIENT_PORT}
       - XDEBUG_MODE=debug
