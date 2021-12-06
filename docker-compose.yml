@@ -16,7 +16,6 @@ services:
     build:
       context: ./docker/php
       args:
-        - PHP_VERSION=${PHP_VERSION}
         - PUID=${PUID}
         - PGID=${PGID}
         - LOCALE=${LOCALE}
