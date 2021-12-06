@@ -19,30 +19,35 @@ ARG LOCALE=POSIX
 ENV LC_ALL ${LOCALE}
 
 RUN apk add --no-cache \
-		acl \
-		fcgi \
-		file \
-		gettext \
-		git \
-		gnu-libiconv \
+        acl \
+        fcgi \
+        file \
+        gettext \
+        git \
+        gnu-libiconv \
         vim \
         zip
 
 RUN apk add --update --no-cache --virtual .build-dependencies \
-            $PHPIZE_DEPS \
-            icu-dev \
-            libzip-dev \
-            zlib-dev \
-        && pecl install \
-              apcu \
-              opcache \
-              xdebug-3.1.2 \
-        && docker-php-ext-enable \
-              apcu \
-              opcache \
-              xdebug \
-        && pecl clear-cache \
-        && apk del .build-dependencies
+        $PHPIZE_DEPS \
+        icu-dev \
+        libzip-dev \
+        zlib-dev \
+    && docker-php-ext-install \
+        intl \
+        opcache \
+        pdo \
+        pdo_mysql \
+        zip \
+    && pecl install \
+        apcu \
+        xdebug-3.1.2 \
+    && docker-php-ext-enable \
+        apcu \
+        opcache \
+        xdebug \
+    && pecl clear-cache \
+    && apk del .build-dependencies
 
 # node, npm & yarn (via corepack, see https://yarnpkg.com/getting-started/install)
 ENV ALPINE_MIRROR "http://dl-cdn.alpinelinux.org/alpine"
