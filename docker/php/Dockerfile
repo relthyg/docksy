@@ -40,7 +40,7 @@ RUN apk add --update --no-cache --virtual .build-dependencies \
         && pecl install \
               apcu \
               opcache \
-              xdebug-3.0.2 \
+              xdebug-3.1.2 \
               imagick \
         && docker-php-ext-enable \
               apcu \
