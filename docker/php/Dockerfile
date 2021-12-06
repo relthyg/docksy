@@ -39,6 +39,7 @@ RUN apk add --update --no-cache --virtual .build-dependencies \
               xdebug-3.1.2 \
         && docker-php-ext-enable \
               apcu \
+              opcache \
               xdebug \
         && pecl clear-cache \
         && apk del .build-dependencies
