@@ -44,10 +44,11 @@ RUN apk add --update --no-cache --virtual .build-dependencies \
         && pecl clear-cache \
         && apk del .build-dependencies
 
-# node
+# node, npm & yarn (via corepack, see https://yarnpkg.com/getting-started/install)
 ENV ALPINE_MIRROR "http://dl-cdn.alpinelinux.org/alpine"
-RUN echo "${ALPINE_MIRROR}/edge/main" >> /etc/apk/repositories && \
-    apk add --no-cache nodejs-current  --repository="http://dl-cdn.alpinelinux.org/alpine/edge/community"
+RUN echo "${ALPINE_MIRROR}/edge/main" >> /etc/apk/repositories \
+    && apk add --no-cache nodejs-current npm --repository="http://dl-cdn.alpinelinux.org/alpine/edge/community" \
+    && npm i -g corepack
 
 RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
