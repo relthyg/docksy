@@ -19,6 +19,7 @@ services:
         - PUID=${PUID}
         - PGID=${PGID}
         - LOCALE=${LOCALE}
+        - PHP_VERSION=${PHP_VERSION}
     volumes:
       - ${APP_DIR}:/srv/app
       - ${HOME}/.git:/home/docksy/.git
