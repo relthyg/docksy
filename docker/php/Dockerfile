@@ -11,69 +11,40 @@ ENV PUID ${PUID}
 ARG PGID=1000
 ENV PGID ${PGID}
 
-RUN addgroup -g ${PGID} docksy && \
-  adduser -G docksy -u ${PUID} --disabled-password docksy
-
 # locales
 ARG LOCALE=POSIX
 ENV LC_ALL ${LOCALE}
 
+RUN addgroup -g ${PGID} docksy && \
+  adduser -G docksy -u ${PUID} --disabled-password docksy
+
 RUN apk add --no-cache \
-        acl \
-        fcgi \
-        file \
-        gettext \
-        git \
-        gnu-libiconv \
-        nodejs-current \
-        npm \
-        vim \
-        zip \
+    acl \
+    bash \
+    fcgi \
+    file \
+    gettext \
+    git \
+    gnu-libiconv \
+    nodejs-current \
+    npm \
+    vim \
+    zip \
+    $PHPIZE_DEPS \
+    icu-dev \
+    libzip-dev \
+    zlib-dev \
     && \
     npm i -g corepack
 
-# install gnu-libiconv and set LD_PRELOAD env to make iconv work fully on Alpine image.
-# see https://github.com/docker-library/php/issues/240#issuecomment-763112749
-ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
-
-# shamelessly nicked from https://github.com/dunglas/symfony-docker
-ARG APCU_VERSION=5.1.21
-ARG XDEBUG_VERSION=3.1.2
-RUN set -eux; \
-	apk add --no-cache --virtual .build-deps \
-		$PHPIZE_DEPS \
-		icu-dev \
-		libzip-dev \
-		zlib-dev \
-	; \
-	\
-	docker-php-ext-configure zip; \
-	docker-php-ext-install -j$(nproc) \
-		intl \
-		zip \
-        pdo \
-        pdo_mysql \
-	; \
-	pecl install \
-		apcu-${APCU_VERSION} \
-        xdebug-${XDEBUG_VERSION} \
-	; \
-	pecl clear-cache; \
-	docker-php-ext-enable \
-		apcu \
-		opcache \
-        xdebug \
-	; \
-	\
-	runDeps="$( \
-		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
-			| tr ',' '\n' \
-			| sort -u \
-			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
-	)"; \
-	apk add --no-cache --virtual .phpexts-rundeps $runDeps; \
-	\
-	apk del .build-deps
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN install-php-extensions \
+    intl \
+    zip \
+    pdo \
+    pdo_mysql \
+    apcu \
+    xdebug
 
 RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
