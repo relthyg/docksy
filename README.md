@@ -1,9 +1,5 @@
 # Quickstart
 
-Generate a standard configuration
-
-    cp env-example .env
-
 ## Use your existing Symfony project
 
 Put your symfony application into a folder named `app`, e.g.
