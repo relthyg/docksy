@@ -24,9 +24,13 @@ Start the environment
 
 and run
 
-    docker-compose exec -u docksy php composer create-project symfony/skeleton .
+    docker-compose exec -u docksy php composer create-project symfony/skeleton tmp
     # or
-    docker-compose exec -u docksy php composer create-project symfony/website-skeleton .
+    docker-compose exec -u docksy php composer create-project symfony/website-skeleton tmp
+
+and then
+
+    mv tmp/* ./ && mv tmp/.env ./ && cat tmp/.gitignore >> .gitignore && rm -rf tmp
 
 ## Miscellaneous
 
