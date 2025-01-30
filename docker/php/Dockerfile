@@ -5,13 +5,11 @@ ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /srv/app
 
-# non-root user
 ARG PUID=1000
 ENV PUID ${PUID}
 ARG PGID=1000
 ENV PGID ${PGID}
 
-# locales
 ARG LOCALE=POSIX
 ENV LC_ALL ${LOCALE}
 

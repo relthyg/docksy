@@ -24,8 +24,6 @@ services:
     environment:
       - XDEBUG_CONFIG=client_host=${XDEBUG_CLIENT_HOST:-host.docker.internal} client_port=${XDEBUG_CLIENT_PORT:-9003}
       - XDEBUG_MODE=debug
-      # This is extremely insecure and should be changed in production. But we need a privileged user here to be able to
-      # create a second database for testing purposes with `bin/console doctrine:database:create -e test`.
       - DATABASE_URL=mysql://root:${MYSQL_ROOT_PASSWORD:-my_password}@mysql:3306/${MYSQL_DATABASE:-my_app}?serverVersion=8&charset=utf8
 
   mysql:
